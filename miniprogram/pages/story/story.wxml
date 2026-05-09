@@ -1,0 +1,63 @@
+<view class="story-container">
+  <view class="page-header">
+    <view class="page-header-content">
+      <view class="page-title">
+        <text class="page-title-icon">📝</text>
+        <text>我的故事</text>
+      </view>
+      <text class="page-desc">记录生活中的点点滴滴</text>
+    </view>
+  </view>
+
+  <view class="content-section">
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">✍️ 今日故事</text>
+        <text class="char-count">{{storyInput.length}}/500</text>
+      </view>
+      <textarea 
+        class="story-textarea" 
+        placeholder="今天发生了什么？记录下来，成为创作的灵感..."
+        value="{{storyInput}}"
+        bindinput="onInput"
+        maxlength="500"
+      />
+      <button class="submit-btn" bindtap="saveStory">💾 保存故事</button>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">📚 历史故事</text>
+        <text class="history-count">{{stories.length}}条</text>
+      </view>
+
+      <view wx:if="{{stories.length === 0}}" class="empty-state">
+        <text class="empty-icon">📭</text>
+        <text class="empty-text">还没有记录任何故事</text>
+        <text class="empty-hint">写下你的第一个故事吧~</text>
+      </view>
+
+      <view wx:else class="story-list">
+        <view wx:for="{{stories}}" wx:key="id" class="story-card">
+          <view class="story-content-wrap">
+            <text class="story-content">{{item.content}}</text>
+            <view class="story-footer">
+              <text class="story-date">{{item.dateDisplay}}</text>
+              <view class="story-status {{item.used ? 'used' : 'unused'}}">
+                {{item.used ? '已使用' : '未使用'}}
+              </view>
+            </view>
+          </view>
+          <view class="story-actions">
+            <button class="action-btn use" bindtap="onRandomUse" data-id="{{item.id}}" open-type="none">
+              <text>🎲</text>
+            </button>
+            <button class="action-btn delete" bindtap="onDelete" data-id="{{item.id}}" open-type="none">
+              <text>🗑️</text>
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

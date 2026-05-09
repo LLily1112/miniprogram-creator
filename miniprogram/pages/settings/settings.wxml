@@ -1,0 +1,106 @@
+<view class="container">
+  <view class="page-header">
+    <view class="page-title">⚙️ API设置</view>
+    <view class="page-desc">配置AI服务密钥，确保功能正常使用</view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">🔑 DeepSeek API</view>
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-title">API密钥</text>
+        <text class="label-desc">用于AI脚本生成功能</text>
+      </view>
+      <view class="input-group">
+        <input
+          class="setting-input {{showApiKey ? '' : 'password'}}"
+          type="{{showApiKey ? 'text' : 'password'}}"
+          placeholder="请输入DeepSeek API密钥"
+          bindinput="onApiKeyInput"
+          value="{{apiKey}}"
+        />
+        <text class="toggle-visibility" bindtap="toggleVisibility">{{showApiKey ? '🙈' : '👁️'}}</text>
+      </view>
+    </view>
+
+    <view class="help-card">
+      <text class="help-title">💡 如何获取API密钥？</text>
+      <view class="help-steps">
+        <text class="step">1. 访问 DeepSeek 官网：console.deepseek.com</text>
+        <text class="step">2. 注册/登录账号</text>
+        <text class="step">3. 进入「API Keys」页面</text>
+        <text class="step">4. 点击「Create API Key」创建密钥</text>
+        <text class="step">5. 复制密钥并粘贴到上方输入框</text>
+      </view>
+    </view>
+
+    <view class="pricing-info">
+      <text class="info-title">💰 费用说明</text>
+      <view class="info-content">
+        <text class="info-item">• DeepSeek API 价格低廉</text>
+        <text class="info-item">• 生成一次脚本约消耗 500-1000 tokens</text>
+        <text class="info-item">• 成本约 ¥0.01-0.02 元/次</text>
+        <text class="info-item">• 新用户有免费额度赠送</text>
+      </view>
+    </view>
+
+    <view class="action-btns">
+      <button class="btn-save" bindtap="saveApiKey">保存密钥</button>
+      <button class="btn-test" bindtap="testConnection">测试连接</button>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">📊 其他API配置</view>
+    
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="label-title">天行数据 API</text>
+        <text class="label-desc">用于获取抖音热榜数据（可选）</text>
+      </view>
+      <view class="input-group">
+        <input
+          class="setting-input"
+          type="text"
+          placeholder="用于热点话题API（可选）"
+          bindinput="onTianxingInput"
+          value="{{tianxingKey}}"
+        />
+      </view>
+      <view class="help-card small">
+        <text class="help-hint">天行数据提供免费热榜API，每日50次免费调用额度</text>
+      </view>
+    </view>
+
+    <view class="action-btns">
+      <button class="btn-save" bindtap="saveTianxingKey">保存</button>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">ℹ️ 使用说明</view>
+    <view class="usage-info">
+      <view class="usage-item">
+        <text class="usage-icon">📝</text>
+        <view class="usage-content">
+          <text class="usage-title">脚本生成</text>
+          <text class="usage-desc">需要配置DeepSeek API密钥后才能使用AI生成脚本功能</text>
+        </view>
+      </view>
+      <view class="usage-item">
+        <text class="usage-icon">🔥</text>
+        <view class="usage-content">
+          <text class="usage-title">热点话题</text>
+          <text class="usage-desc">可选配置天行数据API获取实时热榜，也可使用内置Mock数据</text>
+        </view>
+      </view>
+      <view class="usage-item">
+        <text class="usage-icon">🔒</text>
+        <view class="usage-content">
+          <text class="usage-title">数据安全</text>
+          <text class="usage-desc">您的API密钥仅保存在本地，不会上传到任何服务器</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

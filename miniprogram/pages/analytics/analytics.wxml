@@ -1,0 +1,138 @@
+<view class="container">
+  <scroll-view scroll-y class="scroll-container">
+  <view class="page-header">
+    <view class="page-title">📊 截图智能分析</view>
+    <view class="page-desc">上传后台截图，AI自动识别数据并深度解读</view>
+  </view>
+
+  <view class="section upload-section">
+    <view class="upload-tips">
+      <text class="tip-item">✨ 支持抖音创作服务平台、巨量引擎等后台截图</text>
+      <text class="tip-item">✨ 自动识别播放量、点赞、粉丝等核心数据</text>
+      <text class="tip-item">✨ AI深度分析，提供专业优化建议</text>
+    </view>
+    
+    <view class="upload-area" bindtap="chooseImage">
+      <view wx:if="{{!uploadedImage}}" class="upload-placeholder">
+        <text class="upload-icon">📊</text>
+        <text class="upload-text">点击上传截图</text>
+        <text class="upload-hint">支持 JPG、PNG 格式</text>
+      </view>
+      <image wx:else src="{{uploadedImage}}" mode="aspectFit" class="uploaded-image"></image>
+    </view>
+
+    <view wx:if="{{uploadedImage}}" class="upload-actions">
+      <button class="btn-outline" bindtap="chooseImage">重新上传</button>
+      <button class="btn-primary" bindtap="analyzeImage" loading="{{isAnalyzing}}">
+        {{isAnalyzing ? '分析中...' : '🔍 开始AI分析'}}
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{isAnalyzing}}" class="section analysis-loading">
+    <view class="loading-animation">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">AI正在分析截图...</text>
+    </view>
+  </view>
+
+  <view wx:if="{{recognizedData && !isAnalyzing}}" class="section">
+    <view class="section-title">📝 识别结果</view>
+    <view class="recognized-data-card">
+      <view class="data-header">
+        <text class="data-title">已识别的数据指标</text>
+      </view>
+      
+      <view class="data-grid">
+        <view class="data-item">
+          <text class="data-label">播放量</text>
+          <text class="data-value">{{recognizedData.plays}}</text>
+        </view>
+        <view class="data-item">
+          <text class="data-label">点赞数</text>
+          <text class="data-value">{{recognizedData.likes}}</text>
+        </view>
+        <view class="data-item">
+          <text class="data-label">评论数</text>
+          <text class="data-value">{{recognizedData.comments}}</text>
+        </view>
+        <view class="data-item">
+          <text class="data-label">收藏数</text>
+          <text class="data-value">{{recognizedData.favorites}}</text>
+        </view>
+      </view>
+
+      <view class="derived-metrics">
+        <view class="derived-item">
+          <text class="derived-label">互动率</text>
+          <text class="derived-value">{{recognizedData.interactionRate}}%</text>
+        </view>
+        <view class="derived-item">
+          <text class="derived-label">吸粉率</text>
+          <text class="derived-value">{{recognizedData.fanRate}}%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{aiAnalysis && !isAnalyzing}}" class="section">
+    <view class="section-title">🤖 AI深度分析报告</view>
+    
+    <view class="analysis-card">
+      <view class="health-section">
+        <text class="section-label">📊 内容健康度诊断</text>
+        <view class="health-overview">
+          <view class="health-score-circle">
+            <text class="score-num">{{aiAnalysis.healthScore}}</text>
+            <text class="score-unit">分</text>
+          </view>
+          <view class="health-level">
+            {{aiAnalysis.healthLevelText}}
+          </view>
+        </view>
+      </view>
+
+      <view class="insight-section">
+        <text class="section-label">💡 核心洞察</text>
+        <view wx:for="{{aiAnalysis.insights}}" wx:key="index" class="insight-item">
+          <text class="insight-icon">{{item.icon}}</text>
+          <view class="insight-content">
+            <text class="insight-title">{{item.title}}</text>
+            <text class="insight-text">{{item.content}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="advice-section">
+        <text class="section-label">🎯 优化建议</text>
+        <view wx:for="{{aiAnalysis.advice}}" wx:key="index" class="advice-item">
+          <view class="advice-priority {{item.priority}}">
+            {{item.priorityText}}
+          </view>
+          <view class="advice-content">
+            <text class="advice-title">{{item.title}}</text>
+            <text class="advice-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">📚 历史分析记录</view>
+    <view wx:if="{{historyList.length === 0}}" class="empty-history">
+      <text class="empty-icon">📂</text>
+      <text class="empty-text">暂无分析记录</text>
+    </view>
+    <view wx:else class="history-list">
+      <view wx:for="{{historyList}}" wx:key="index" class="history-item">
+        <image src="{{item.thumbnail}}" mode="aspectFill" class="history-thumb"></image>
+        <view class="history-info">
+          <text class="history-title">{{item.date}}</text>
+          <text class="history-score">健康度：{{item.healthScore}}分</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  </scroll-view>
+</view>

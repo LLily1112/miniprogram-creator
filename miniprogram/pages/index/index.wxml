@@ -1,0 +1,145 @@
+<view class="hot-container">
+  <scroll-view scroll-y class="scroll-container">
+  <view class="page-header">
+    <view class="page-header-content">
+      <view class="header-top">
+        <view class="page-title">
+          <text class="page-title-icon">🔥</text>
+          <text>热点话题榜</text>
+        </view>
+        <view class="header-actions">
+          <text class="refresh-btn" bindtap="onRefresh">🔄</text>
+        </view>
+      </view>
+      <view class="header-info">
+        <text class="page-desc">最新最热的创作话题都在这</text>
+        <text wx:if="{{lastUpdateTime}}" class="update-time">更新: {{lastUpdateTime}}</text>
+      </view>
+      
+      <view class="platform-tabs">
+        <view 
+          wx:for="{{tabs}}" 
+          wx:key="id" 
+          class="platform-tab {{currentTab === item.id ? 'active' : ''}}"
+          bindtap="onTabChange"
+          data-id="{{item.id}}"
+        >
+          <text class="tab-icon">{{item.icon}}</text>
+          <text class="tab-name">{{item.name}}</text>
+        </view>
+      </view>
+
+      <view class="search-bar">
+        <input 
+          class="search-input" 
+          placeholder="搜索话题关键词..." 
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearch"
+        />
+        <view wx:if="{{searchKeyword}}" class="search-clear" bindtap="clearSearch">×</view>
+        <view class="search-btn" bindtap="onSearch">🔍</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <view wx:elif="{{refreshing}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">刷新中...</text>
+  </view>
+
+  <view wx:else class="hot-list">
+    <view wx:for="{{hotTopics}}" wx:key="id" class="hot-card" bindtap="onTopicTap" data-id="{{item.id}}">
+      <view class="hot-item">
+        <view class="rank-badge" data-rank="{{item.rank}}">
+          <text wx:if="{{item.rank <= 3}}" class="rank-num">{{item.rank}}</text>
+          <text wx:else class="rank-dot">•</text>
+        </view>
+        <view class="hot-content">
+          <view class="hot-title-wrap">
+            <text class="hot-title">{{item.title}}</text>
+            <text wx:if="{{item.isNew}}" class="tag new">新</text>
+            <text wx:if="{{item.isHot}}" class="tag hot">热</text>
+          </view>
+          <text class="hot-desc">{{item.desc}}</text>
+          <view class="hot-meta">
+            <text class="heat-value">🔥 {{item.heatValue}}</text>
+            <text class="trend {{item.trendUp ? 'trend-up' : 'trend-down'}}">{{item.trend}}</text>
+            <text class="category-tag">{{item.category}}</text>
+          </view>
+        </view>
+        <view class="hot-actions">
+          <view 
+            class="collect-btn {{item.isCollected ? 'collected' : ''}}" 
+            bindtap="onCollectTopic" 
+            data-id="{{item.id}}"
+          >
+            <text>{{item.isCollected ? '❤️' : '🤍'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showDetail}}" class="detail-modal" bindtap="closeDetail">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">{{currentTopic ? currentTopic.title : ''}}</text>
+        <text class="close-btn" bindtap="closeDetail">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="detail-info">
+          <view class="info-item">
+            <text class="info-label">🔥 热度</text>
+            <text class="info-value">{{currentTopic ? currentTopic.heatValue : ''}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">📈 趋势</text>
+            <text class="info-value {{currentTopic && currentTopic.trendUp ? 'trend-up' : ''}}">{{currentTopic ? currentTopic.trend : ''}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">🏷️ 分类</text>
+            <text class="info-value">{{currentTopic ? currentTopic.category : ''}}</text>
+          </view>
+        </view>
+        
+        <view class="section">
+          <text class="section-title">📹 热门视频</text>
+          <view wx:for="{{currentTopic ? currentTopic.videos : []}}" wx:key="index" class="video-item">
+            <text class="video-title">{{item.title}}</text>
+            <view class="video-stats">
+              <text class="stat">👍 {{item.likes}}</text>
+              <text class="stat">💬 {{item.comments}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="section">
+          <text class="section-title">🔤 评论热词</text>
+          <view class="words-cloud">
+            <text wx:for="{{currentTopic ? currentTopic.words : []}}" wx:key="index" class="word-tag">{{item}}</text>
+          </view>
+        </view>
+        
+        <view class="action-buttons">
+          <button 
+            class="action-btn {{currentTopic && currentTopic.isCollected ? 'collected' : ''}}" 
+            bindtap="onCollectTopic" 
+            data-id="{{currentTopic ? currentTopic.id : ''}}"
+          >
+            {{currentTopic && currentTopic.isCollected ? '❤️ 已收藏' : '🤍 收藏话题'}}
+          </button>
+          <button class="action-btn primary" bindtap="useTopic">
+            ✨ 用于创作
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+  </scroll-view>
+</view>
